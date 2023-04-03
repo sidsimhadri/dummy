@@ -3,27 +3,23 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route, useNavigate} from "react-router-dom";
 import { createInteraction } from "./services/logs-service";
 
-function navWithClickLog(nav, path, data={}) {
+function navWithClickLog(data={}) {
 
   // log interaction
   let interaction = {
     username: window.localStorage.getItem('user'),
-    link: path,
     data: JSON.stringify(data)
   }
 
   createInteraction(interaction)
-    .then(_ => {
-      if (path[0] === "/") nav(path)
-      else window.location.href = path
-    })
+    .then(window.history.back
+    )
     .catch(e => console.log(e))
 
 }
 
 function Login(props) {
 
-  let nav = useNavigate();
   let [pass, setPass] = useState("");
 
   let style = {
@@ -81,12 +77,9 @@ function Login(props) {
         if (!path) {
           path = "v1"
         }
-
-
-      window.localStorage.setItem('user', props.user)
       
         createInteraction({ username: props.user, version: pwLookup[pass], data: "leaked" } )
-        .then(navWithClickLog(nav, `/${path}`))
+        .then(navWithClickLog())
         .catch(e => console.log(e))
 
     }}>Login</button>
