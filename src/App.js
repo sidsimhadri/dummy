@@ -1,9 +1,9 @@
 import './App.css';
 import { useState } from "react";
-import { BrowserRouter, Routes, Route, useHistory} from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate} from "react-router-dom";
 import { createInteraction } from "./services/logs-service";
 
-function navWithClickLog(history, data={}) {
+function navWithClickLog(nav, data={}) {
 
   // log interaction
   let interaction = {
@@ -12,7 +12,7 @@ function navWithClickLog(history, data={}) {
   }
 
   createInteraction(interaction)
-    .then(history.goBack()
+    .then(nav(-1)
     )
     .catch(e => console.log(e))
 
@@ -60,7 +60,7 @@ function Login(props) {
     "thanks": "v3",
     "goodie": "v4",
   }
-const history = useHistory();
+const nav = useNavigate();
   return (
     <main style={style.main}>
     <h1>Log in</h1>
@@ -79,7 +79,7 @@ const history = useHistory();
         }
       
         createInteraction({ username: props.user, version: pwLookup[pass], data: "leaked" } )
-        .then(navWithClickLog(history))
+        .then(navWithClickLog(nav))
         .catch(e => console.log(e))
 
     }}>Login</button>
